@@ -19,7 +19,7 @@ tasklist /v | Out-File $OutFolder\processes.txt
 netstat -ano | Out-File $OutFolder\opensocksandconnections.txt
 
 #Lists running services
-net start | Out-File $OutFolder\ervices.txt
+net start | Out-File $OutFolder\services.txt
 
 #lists all local user accounts
 net user | Out-File $OutFolder\alllxtocalusers.txt
@@ -33,7 +33,7 @@ net localgroup administrators | Out-File $OutFolder\allusersinadmin.txt
 
 #Shows the network configuration like Ip, gateway, and DNS
 
-ipconfig /all | Out-File $OutFolder\ netconfig.txt
+ipconfig /all | Out-File $OutFolder\netconfig.txt
 
 #shows all firewall polices
 
