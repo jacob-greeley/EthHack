@@ -2,45 +2,45 @@
 
 #lists current user, groups, and privileges
 
-whoami /all
+whoami /all > whoiseveryone.txt
 
 #Lists running processes
-tasklist /v
+tasklist /v > processes.txt
 
 #Lists any open network sockets and connections 
 
-netstat -ano
+netstat -ano > opensocksandconnections.txt
 
 #Lists running services
-net start
+net start > services.txt
 
 #lists all local user accounts
-net user
+net user > alllxtocalusers.txt
 
 #lists all local groups
-net localgroup
+net localgroup > alllocalgroups.txt
 
 #lists all users in administrators groups
 
-net localgroup administrators
+net localgroup administrators > allusersinadmin.txt
 
 #Shows the network configuration like Ip, gateway, and DNS
 
-ipconfig /all
+ipconfig /all > netconfig.txt
 
 #shows all firewall polices
 
-netsh advfirewall firewall show rule name=all
+netsh advfirewall firewall show rule name=all > firwallpolices.txt
 
 #Shows the ARP table
 
-arp -a
+arp -a > arptable.txt
 
 #shows any active SMB sessions
 
-net use
+net use > active smb sessions
 
 #Shows system information
 
-systeminfo
+systeminfo > systeminfo.txt
 
