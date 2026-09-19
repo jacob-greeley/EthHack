@@ -129,7 +129,7 @@ $ddfContent = @"
 #Looks through every .txt file in the folder and adds them one line at a time
 
 Get-ChildItem $OutFolder\*.txt | Foreach-Object { 
-    $ddfContent += "`n`"$($_.FullName)`""
+    $ddfContent += "`n`"$($_FullName)`""
 
 # writes the finish DDF out to an actual file makecan can read
 
