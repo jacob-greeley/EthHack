@@ -118,7 +118,7 @@ $ddfPath = "$Outfolder\archive.ddf"
 
 # this is the header of the DDF, they only need to be set once
 
-$ddfCOntent = @"
+$ddfContent = @"
 .OPTION EXPLICIT
 .Set CabinetNameTemplate=output_makecab.cab
 .Set DiskDirectory1=$OutFolder
@@ -129,7 +129,7 @@ $ddfCOntent = @"
 #Looks through every .txt file in the folder and adds them one line at a time
 
 Get-ChildItem $OutFolder\*.txt | Foreach-Object { 
-    $ddfCOntent += "'n'"$($_.FullName)'""
+    $ddfContent += "'n'"$($_.FullName)'""
 
 # writes the finish DDF out to an actual file makecan can read
 
