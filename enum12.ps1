@@ -80,3 +80,63 @@ wmic product get name,version,vendor | Out-File $OutFolder\3rdpartysoftware.txt
 # a quick target list for lateral movement and shares could expose sensitive files
 
 net view /all | Out-File $OutFolder\sharedinfo.txt
+
+
+#Compression Section
+#The following section will you 7-zip, command line version, tar, Compress-Archive, and makecab to compress all of the previous files that were made
+
+#Compress all out files with 7-zip
+# I added 7-Zip to path using  “[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\your\folder\path" otherwise
+# you will have to specify the path everytime
+# I might create a script that auto installs 7-zipcommand line but that is for future me
+
+7za.exe a -tzip $OutFolder\output_7za.zip $OutFolder\*.txt
+
+# a means it adds to archive
+# -tzip changes the archive type to zip
+
+#Compresses all out files with tar
+
+tar -czvf $OutFolder\output_tar.tar.gz -C $OutFolder *.txt
+
+# -c creates archive
+# -z is gzip compression
+# -v is verbose
+# -C C:\temp changes to that directory first so paths inside the archive are relative and
+# not absolute
+
+#Compresses all out files with Compress-Archive
+
+Compress-Archive -Path $OutFolder\*.txt -DestinationPath $OutFolder\output_compressarchive.zip
+
+#Compresses with makecab
+#makecab normally only takes one input file per invocation
+# we need to use a Diamond Directive File, basicly a tiny script that tells makecab
+# heres your output name, here's the folder, heres  the full list of files
+
+$ddfPath = "$Outfolder\archive.ddf"
+
+# this is the header of the DDF, they only need to be set once
+
+$ddfCOntent = @"
+.OPTION EXPLICIT
+.Set CabinetNameTemplate=output_makecab.cab
+.Set DiskDirectory1=$OutFolder
+.Set Cabinet=on
+.Set Compress=on
+"@
+
+#Looks through every .txt file in the folder and adds them one line at a time
+
+Get-ChildItem $OutFolder\*.txt | Foreach-Object { 
+    $ddfCOntent += "'n'"$($_.FullName)'""
+
+# writes the finish DDF out to an actual file makecan can read
+
+$ddfContent | Out-File $ddfPath -Encoding ASCII
+
+# /F tells makecab to not expect a filename on the command line and to go read a 
+# directive file instead
+
+makecab /F $ddfPath 
+
