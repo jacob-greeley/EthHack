@@ -128,7 +128,7 @@ $ddfContent = @"
 
 #Looks through every .txt file in the folder and adds them one line at a time
 
-Get-ChildItem $OutFolder\*.txt | Foreach-Object { 
+Get-ChildItem $OutFolder\*.txt | Foreach-Object {
     $ddfContent += "`n`"$($_FullName)`""
 }
 
