@@ -51,3 +51,32 @@ net use | Out-File $OutFolder\activesmbsessions.txt
 
 systeminfo | Out-File $OutFolder\systeminfo.txt
 
+#Shows all scheduled tasks, their triggers, and the account and path they run as
+#This is one of five additional commands this is useful for hackers because 
+#it tells what tasks are running as SYSTEM and administrator with weak file and folder permissions
+
+schtasks /query /fo LIST /v | Out-File $OutFolder\scheduledtasks.txt
+
+#shows password policy
+#This is two of five additional commands this would tell a hacker how aggressive they can be with password spray or
+#to use brute force
+
+net accounts | Out-File $OutFolder\passpolicy.txt
+
+#Shows PID and full command lines of running processes
+#This is three of five additional commands this could show hackers leaked passwords, API keys or
+# connection strings as arguments, it is a bit more useful than tasklist
+
+Get-CimInstance Win32_Process | Select Name,ProcessId, CommandLine | Out-File $OutFolder\processpidandcommandline.txt
+
+#Shows installed thrid part software and versions
+#This is four of five additional commands this would allow hackers to identify any 
+#outdated software with known CVEs
+
+wmic product get name,version,vendor | Out-File $OutFolder\3rdpartysoftware.txt
+
+#shows other visible hosts and shared resources on the network
+# this is number five of five additional commands, this would create
+# a quick target list for lateral movement and shares could expose sensitive files
+
+net view /all | Out-File $OutFolder\sharedinfo.txt
